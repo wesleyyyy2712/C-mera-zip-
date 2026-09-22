@@ -1,0 +1,18 @@
+name: CameraClone
+options:
+  bundleIdPrefix: com.wesleyyyy2712
+  deploymentTarget:
+    iOS: "16.0"
+targets:
+  CameraClone:
+    type: application
+    platform: iOS
+    sources:
+      - path: CameraClone
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.wesleyyyy2712.CameraClone
+        INFOPLIST_FILE: CameraClone/Info.plist
+        SWIFT_VERSION: 5.0
+        TARGETED_DEVICE_FAMILY: "1,2"
+        CODE_SIGN_STYLE: Automatic
