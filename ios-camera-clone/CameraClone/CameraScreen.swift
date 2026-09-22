@@ -35,7 +35,7 @@ struct CameraScreen: View {
                         else { Color.white.opacity(0.16) }
                     }.frame(width: 48, height: 48).clipShape(RoundedRectangle(cornerRadius: 8))
                     Spacer()
-                    Button { camera.capture() } {
+                    Button(action: { camera.capture() }) {
                         Circle().fill(.white).frame(width: 76, height: 76).overlay(Circle().stroke(.white.opacity(0.4), lineWidth: 4).padding(-7))
                     }
                     Spacer()
