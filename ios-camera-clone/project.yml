@@ -11,8 +11,9 @@ targets:
       - path: CameraClone
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.wesleyyyy2712.CameraClone
+        PRODUCT_BUNDLE_IDENTIFIER: com.wesleyyyy2712.CameraNative
         INFOPLIST_FILE: CameraClone/Info.plist
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         SWIFT_VERSION: 5.0
         TARGETED_DEVICE_FAMILY: "1,2"
         CODE_SIGN_STYLE: Automatic
