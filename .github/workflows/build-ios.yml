@@ -17,7 +17,11 @@ jobs:
         run: brew install xcodegen
       - name: Generate Xcode project
         working-directory: ios-camera-clone
-        run: xcodegen generate
+        run: |
+          xcodegen generate
+          # XcodeGen recente gera objectVersion 77 (Xcode 16),
+          # enquanto o runner macOS-14 usa Xcode 15.4.
+          sed -i '' 's/objectVersion = 77;/objectVersion = 56;/' CameraClone.xcodeproj/project.pbxproj
       - name: Build unsigned archive
         working-directory: ios-camera-clone
         run: xcodebuild -project CameraClone.xcodeproj -scheme CameraClone -sdk iphoneos -configuration Release -derivedDataPath build CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build

@@ -1,5 +1,4 @@
 name: CameraClone
-projectFormat: Xcode15_0
 options:
   bundleIdPrefix: com.wesleyyyy2712
   deploymentTarget:
