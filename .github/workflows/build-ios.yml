@@ -1,10 +1,11 @@
-name: Build iOS IPA
+name: Build SwiftUI Camera IPA
 
 on:
   workflow_dispatch:
   push:
     paths:
-      - 'ios-camera-clone/**'
+      - 'SwiftUICamera2026-AVFoundation/**'
+      - 'SwiftUICamera2026-AVFoundation.xcodeproj/**'
       - '.github/workflows/build-ios.yml'
 
 jobs:
@@ -13,25 +14,28 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Install XcodeGen
-        run: brew install xcodegen
-      - name: Generate Xcode project
-        working-directory: ios-camera-clone
+      - name: Build unsigned app
         run: |
-          xcodegen generate
-          # XcodeGen recente gera objectVersion 77 (Xcode 16),
-          # enquanto o runner macOS-14 usa Xcode 15.4.
-          sed -i '' 's/objectVersion = 77;/objectVersion = 56;/' CameraClone.xcodeproj/project.pbxproj
-      - name: Build unsigned archive
-        working-directory: ios-camera-clone
-        run: xcodebuild -project CameraClone.xcodeproj -scheme CameraClone -sdk iphoneos -configuration Release -derivedDataPath build CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build
-      - name: Package unsigned IPA
+          xcodebuild -project SwiftUICamera2026-AVFoundation.xcodeproj \
+            -scheme SwiftUICamera2026-AVFoundation \
+            -sdk iphoneos \
+            -configuration Release \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO \
+            IPHONEOS_DEPLOYMENT_TARGET=17.0 build
+      - name: Package IPA
         run: |
+          rm -rf Payload SwiftUICamera-unsigned.ipa
           mkdir -p Payload
-          cp -R ios-camera-clone/build/Build/Products/Release-iphoneos/CameraClone.app Payload/
-          zip -qry CameraClone-unsigned.ipa Payload
-      - name: Upload IPA artifact
+          cp -R build/Build/Products/Release-iphoneos/SwiftUICamera2026-AVFoundation.app Payload/
+          /usr/bin/ditto -c -k --sequesterRsrc --keepParent Payload SwiftUICamera-unsigned.ipa
+      - name: Validate package
+        run: |
+          unzip -t SwiftUICamera-unsigned.ipa
+          test -d Payload/SwiftUICamera2026-AVFoundation.app
+          /usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' Payload/SwiftUICamera2026-AVFoundation.app/Info.plist
+      - name: Upload IPA
         uses: actions/upload-artifact@v4
         with:
-          name: CameraClone-unsigned-ipa
-          path: CameraClone-unsigned.ipa
+          name: SwiftUICamera-unsigned-ipa
+          path: SwiftUICamera-unsigned.ipa
